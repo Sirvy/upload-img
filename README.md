@@ -1,6 +1,6 @@
 # upload-img
 
-Web application uploading image files.
+Web application for uploading image files.
 
 Stack
 -----
