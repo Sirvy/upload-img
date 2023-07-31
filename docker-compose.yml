@@ -1,0 +1,19 @@
+version: '3.9'
+
+networks:
+  test_network:
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: '${APP_NAME}-server'
+    ports:
+      - '80:80'
+    working_dir: /var/www/html
+    volumes:
+      - ./application:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+    networks:
+      - test_network

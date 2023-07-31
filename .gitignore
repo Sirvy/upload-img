@@ -1,0 +1,8 @@
+.env
+.idea
+application/log
+application/vendor
+application/node_modules
+application/www/assets
+application/www/files
+application/temp
