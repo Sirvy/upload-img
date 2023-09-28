@@ -24,14 +24,14 @@ class SaveImageService
             throw new ImageException('Not an image.');
         }
 
-        if ($file->getSize() >= 2 * 1024 * 1024) {
+        if ($file->getSize() >= 1 * 1024 * 1024) {
             throw new ImageException('Image too large.');
         }
 
         $fileName = md5(date("YmdHis") . $file->getSanitizedName()) . "." . $file->getImageFileExtension();
 
         $image = Image::fromFile($file->getTemporaryFile());
-        $image->resize('50%', '50%');
+        //$image->resize('50%', '50%');
 
         FileSystem::createDir('files/' . date("Ym"));
 
