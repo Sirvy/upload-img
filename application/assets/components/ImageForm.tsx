@@ -1,19 +1,41 @@
 import * as React from "react";
+import {useState} from "react";
 import axios from "axios";
 import {isExceptionResponseInterface, isImageResponseInterface} from "../interfaces/ImageResponse";
 import {startLoading} from "./Loading";
 
 export default class ImageForm extends React.Component<any, any> {
+
+    state:{selectedFile:any} = {
+        selectedFile: null
+    }
+
+    componentDidMount() {
+        document.onpaste = (pasteEvent) => {
+            this.onPaste(pasteEvent);
+        }
+    }
+
+    onPaste = (pasteEvent: ClipboardEvent) => {
+        const imageFile = document.querySelector<HTMLInputElement>('#formFile');
+        imageFile.files = pasteEvent.clipboardData.files;
+        this.setState({selectedFile: pasteEvent.clipboardData.files[0]});
+    }
+
+    onChange = (event: any) => {
+        this.setState({selectedFile: event.target.files[0]});
+    }
+
     handleClick() {
         const formData = new FormData();
         const imageFile = document.querySelector<HTMLInputElement>('#formFile');
 
-        if (imageFile.files.length == 0) {
+        if (this.state.selectedFile == null) {
             alert('No File selected.');
             return;
         }
 
-        formData.append("image", imageFile.files[0]);
+        formData.append("image", this.state.selectedFile);
         const imagePreview = document.querySelector<HTMLElement>("#imagePreview");
         startLoading(imagePreview)
         axios.post('/api/upload', formData, {
@@ -48,7 +70,7 @@ export default class ImageForm extends React.Component<any, any> {
                 <div className="row align-items-end w-100">
                     <div className="col-10" style={{paddingLeft: 0}}>
                         <input className="form-control pl-0" type="file" id="formFile"
-                               accept="image/png, image/jpeg, image/webp"/>
+                               accept="image/png, image/jpeg, image/webp" onChange={this.onChange}/>
                     </div>
                     <div className="col-2 px-0">
                         <button type="button" className="btn btn-primary w-100"
